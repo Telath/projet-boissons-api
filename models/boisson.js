@@ -18,7 +18,7 @@ const boissonSchema = new mongoose.Schema({
 });
 
 // (Étape 3) Création d'une nouvelle propriété virtuelle "id" qui aura la valeur de la propriété "_id"
-studentSchema.virtual("id").get(function () {
+boissonSchema.virtual("id").get(function () {
     return this._id;
 });
 
@@ -31,6 +31,6 @@ boissonSchema.set("toJSON", {
     },
   });
 
-// (Étape 4) Export du modèle student
+// (Étape 4) Export du modèle boisson
 // Les modèles sont responsables de la création et de la lecture des documents à partir de la base de données MongoDB.
 module.exports = mongoose.model("boissons", boissonSchema);
