@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var boissonRouter = require('./routes/boisson');
+var bouteilleRouter = require('./routes/bouteille');
 
 var app = express();
 
@@ -26,5 +27,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/boissons', boissonRouter);
+app.use('/bouteilles', bouteilleRouter);
 
 module.exports = app;

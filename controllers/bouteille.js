@@ -1,11 +1,11 @@
-// Import du modèle boisson
-var Boisson = require("../models/boisson");
+// Import du modèle bouteille
+var Bouteille = require("../models/bouteille");
 
 // Import de express-validator
 const { param, body, validationResult } = require("express-validator");
 
 // Déterminer les règles de validation de la requête
-const boissonValidationRules = () => {
+const bouteilleValidationRules = () => {
     return [   
         body("name")
             .trim()
@@ -14,25 +14,6 @@ const boissonValidationRules = () => {
             .withMessage("Name must be specified.")
             .isAlphanumeric()
             .withMessage("Name has non-alphanumeric characters."),
-
-        body("description")
-            .trim()
-            .isLength({ min: 1 })
-            .escape()
-            .withMessage("Description must be specified."),
-            
-        body("drinkSize")
-            .trim()
-            .isLength({ min: 1 })
-            .escape()
-            .withMessage("drinkSize must be specified.")
-            .isNumeric()
-            .withMessage("drinkSize has non-numeric characters."),
-
-        body("creationDate", "Invalid date of birth")
-            .optional({ checkFalsy: true })
-            .isISO8601()
-            .toDate()
     ]
 }
 
@@ -75,68 +56,60 @@ const checkValidity = (req, res, next) => {
 }
 
 // Create
-exports.create = [bodyIdValidationRule(), boissonValidationRules(), checkValidity, (req, res, next) => {
+exports.create = [bodyIdValidationRule(), bouteilleValidationRules(), checkValidity, (req, res, next) => {
     
-    // Création de la nouvelle instance de boisson à ajouter 
-    var boisson = new Boisson({
+    // Création de la nouvelle instance de bouteille à ajouter 
+    var bouteille = new Bouteille({
         _id: req.body.id,
         name: req.body.name,
-        description: req.body.description,
-        drinkSize: req.body.drinkSize,
-        creationDate: req.body.creationDate,
       });
 
-    // Ajout de boisson dans la bdd 
-    boisson.save()
+    // Ajout de bouteille dans la bdd 
+    bouteille.save()
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(500).json(error));
 }];
 
 // Read
 exports.getAll = (req, res, next) => {
-    Boisson.find()
-    .populate("bouteille")
+    Bouteille.find()
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(500).json(error));
 };
 
 exports.getById = [paramIdValidationRule(), checkValidity, (req, res, next) => {
-    Boisson.findById(req.params.id)
+    Bouteille.findById(req.params.id)
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(500).json(error));
 }];
 
 // Update
-exports.update = [paramIdValidationRule(), boissonValidationRules(), checkValidity,(req, res, next) => {
+exports.update = [paramIdValidationRule(), bouteilleValidationRules(), checkValidity,(req, res, next) => {
     
-    // Création de la nouvelle instance de boisson à modifier 
-    var boisson = new Boisson({
+    // Création de la nouvelle instance de bouteille à modifier 
+    var bouteille = new Bouteille({
         _id: req.params.id,
         name: req.body.name,
-        description: req.body.description,
-        drinkSize: req.body.drinkSize,
-        creationDate: req.body.creationDate,
       });
 
-      Boisson.findByIdAndUpdate(req.params.id, boisson)
-        .then((result) => {
-            if (result) {
-                res.status(200).json(result);
-            } else {
-                res.status(404).json("Boisson with id "+req.params.id+" is not found !");
-            }
-            })
-        .catch((error) => res.status(500).json(error));
+      Bouteille.findByIdAndUpdate(req.params.id, bouteille).then((result) => {
+        if (result) {
+            res.status(200).json(result);
+          } else {
+            res.status(404).json("Bouteille with id "+req.params.id+" is not found !");
+          }
+        })
+    .catch((error) => res.status(500).json(error));
 }];
 
 // Delete
 exports.delete = [paramIdValidationRule(), checkValidity,(req, res, next) => {
-    Boisson.findByIdAndRemove(req.params.id)
+    Bouteille.findByIdAndRemove(req.params.id)
     .then((result) => {
         if (result) {
             res.status(200).json(result);
           } else {
-            res.status(404).json("Boisson with id "+req.params.id+" is not found !");
+            res.status(404).json("Bouteille with id "+req.params.id+" is not found !");
           }
         })
     .catch((error) => res.status(500).json(error));
