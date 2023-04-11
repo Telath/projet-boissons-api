@@ -32,7 +32,13 @@ const boissonValidationRules = () => {
         body("creationDate", "Invalid date of birth")
             .optional({ checkFalsy: true })
             .isISO8601()
-            .toDate()
+            .toDate(),
+
+        body("bouteille")
+            .trim()
+            .isLength({ min: 1 })
+            .escape()
+            .withMessage("Bouteille must be specified."),
     ]
 }
 
@@ -84,6 +90,7 @@ exports.create = [bodyIdValidationRule(), boissonValidationRules(), checkValidit
         description: req.body.description,
         drinkSize: req.body.drinkSize,
         creationDate: req.body.creationDate,
+        bouteille: req.body.bouteille
       });
 
     // Ajout de boisson dans la bdd 
@@ -116,6 +123,7 @@ exports.update = [paramIdValidationRule(), boissonValidationRules(), checkValidi
         description: req.body.description,
         drinkSize: req.body.drinkSize,
         creationDate: req.body.creationDate,
+        bouteille: req.body.bouteille
       });
 
       Boisson.findByIdAndUpdate(req.params.id, boisson)
